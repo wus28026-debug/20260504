@@ -1,12 +1,28 @@
 let capture;
+let faceMesh;
+let faces = [];
+// 您指定的特徵點編號序列
+let faceIndices = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
+// 第二組指定的特徵點編號序列
+let faceIndices2 = [76, 77, 90, 180, 85, 16, 315, 404, 320, 307, 306, 408, 304, 303, 302, 11, 72, 73, 74, 184];
 
 function setup() {
   // 建立全螢幕畫布
   createCanvas(windowWidth, windowHeight);
   // 擷取攝影機影像
   capture = createCapture(VIDEO);
+  capture.size(640, 480); // 設定攝影機解析度
   // 隱藏預設的 HTML 影片元件，只在畫布上繪製
   capture.hide();
+
+  // 初始化 FaceMesh 模型
+  faceMesh = ml5.faceMesh(capture, { maxFaces: 1, refineLandmarks: false, flipHorizontal: false }, () => {
+    console.log("FaceMesh Model Loaded!");
+    // 開始持續偵測
+    faceMesh.detectStart(capture, (results) => {
+      faces = results;
+    });
+  });
 }
 
 function draw() {
@@ -22,6 +38,46 @@ function draw() {
   translate(x + w, y);
   scale(-1, 1);
   image(capture, 0, 0, w, h);
+
+  // 如果有偵測到臉部，則繪製指定編號的串接線條
+  if (faces.length > 0) {
+    let face = faces[0];
+    noFill();
+
+    // 第一組線條：粗細 15
+    stroke('red');
+    strokeWeight(15);
+    for (let i = 0; i < faceIndices.length - 1; i++) {
+      let p1 = face.keypoints[faceIndices[i]];
+      let p2 = face.keypoints[faceIndices[i + 1]];
+
+      if (p1 && p2) {
+        // 將座標從原始攝影機尺寸縮放到畫布上的 50% 顯示尺寸
+        let x1 = p1.x * (w / capture.width);
+        let y1 = p1.y * (h / capture.height);
+        let x2 = p2.x * (w / capture.width);
+        let y2 = p2.y * (h / capture.height);
+        line(x1, y1, x2, y2);
+      }
+    }
+
+    // 第二組線條：粗細 1
+    stroke('red');
+    strokeWeight(1);
+    for (let i = 0; i < faceIndices2.length - 1; i++) {
+      let p1 = face.keypoints[faceIndices2[i]];
+      let p2 = face.keypoints[faceIndices2[i + 1]];
+
+      if (p1 && p2) {
+        // 將座標從原始攝影機尺寸縮放到畫布上的 50% 顯示尺寸
+        let x1 = p1.x * (w / capture.width);
+        let y1 = p1.y * (h / capture.height);
+        let x2 = p2.x * (w / capture.width);
+        let y2 = p2.y * (h / capture.height);
+        line(x1, y1, x2, y2);
+      }
+    }
+  }
   pop();
 }
 
