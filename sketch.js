@@ -49,7 +49,7 @@ function setup() {
 function draw() {
   background(0); // 背景設為黑色，以遮掉臉部以外的區域
 
-  // 繪製背景星星
+  // 繪製全螢幕背景星星，營造外太空感
   noStroke();
   for (let i = 0; i < stars.length; i++) {
     let s = stars[i];
@@ -84,7 +84,8 @@ function draw() {
     endShape(CLOSE);
     endClip(); // 結束遮罩定義，之後繪製的內容只會出現在遮罩內
 
-    // 在遮罩內繪製影像
+    // 在遮罩內繪製影像 (影像現在是疊加在背景星空之上的)
+    // 移除之前的半透明效果 (tint)，讓臉部影像清晰顯示
     image(capture, 0, 0, w, h);
     pop();
     // --- 遮罩結束 ---
