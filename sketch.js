@@ -9,6 +9,10 @@ let faceIndices2 = [76, 77, 90, 180, 85, 16, 315, 404, 320, 307, 306, 408, 304, 
 let eyeOuterIndices = [130, 247, 30, 29, 27, 28, 56, 190, 243, 112, 26, 22, 23, 24, 110, 25];
 // 左眼內圈編號序列 (包含 246)
 let eyeInnerIndices = [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246];
+// 右眼外圈編號序列 (畫面右側)
+let eyeOuterIndices2 = [359, 467, 260, 259, 257, 258, 286, 414, 463, 341, 256, 252, 253, 254, 339, 255];
+// 右眼內圈編號序列 (畫面右側)
+let eyeInnerIndices2 = [263, 249, 390, 373, 374, 380, 381, 382, 362, 398, 384, 385, 386, 387, 388, 466];
 
 function setup() {
   // 建立全螢幕畫布
@@ -103,6 +107,37 @@ function draw() {
     for (let i = 0; i < eyeInnerIndices.length; i++) {
       let p1 = face.keypoints[eyeInnerIndices[i]];
       let p2 = face.keypoints[eyeInnerIndices[(i + 1) % eyeInnerIndices.length]];
+
+      if (p1 && p2) {
+        let x1 = p1.x * (w / capture.width);
+        let y1 = p1.y * (h / capture.height);
+        let x2 = p2.x * (w / capture.width);
+        let y2 = p2.y * (h / capture.height);
+        line(x1, y1, x2, y2);
+      }
+    }
+
+    // 右眼外圈：紅色，粗細 2
+    stroke('red');
+    strokeWeight(2);
+    for (let i = 0; i < eyeOuterIndices2.length; i++) {
+      let p1 = face.keypoints[eyeOuterIndices2[i]];
+      let p2 = face.keypoints[eyeOuterIndices2[(i + 1) % eyeOuterIndices2.length]];
+
+      if (p1 && p2) {
+        let x1 = p1.x * (w / capture.width);
+        let y1 = p1.y * (h / capture.height);
+        let x2 = p2.x * (w / capture.width);
+        let y2 = p2.y * (h / capture.height);
+        line(x1, y1, x2, y2);
+      }
+    }
+
+    // 右眼內圈：紅色，粗細 1
+    strokeWeight(1);
+    for (let i = 0; i < eyeInnerIndices2.length; i++) {
+      let p1 = face.keypoints[eyeInnerIndices2[i]];
+      let p2 = face.keypoints[eyeInnerIndices2[(i + 1) % eyeInnerIndices2.length]];
 
       if (p1 && p2) {
         let x1 = p1.x * (w / capture.width);
