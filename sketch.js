@@ -3,7 +3,7 @@ let faceMesh;
 let faces = [];
 // 您指定的特徵點編號序列
 let faceIndices = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
-// 第二組指定的特徵點編號序列
+// 第二組指定的特徵點編號序列 (內嘴唇輪廓)
 let faceIndices2 = [76, 77, 90, 180, 85, 16, 315, 404, 320, 307, 306, 408, 304, 303, 302, 11, 72, 73, 74, 184];
 
 function setup() {
@@ -44,7 +44,7 @@ function draw() {
     let face = faces[0];
     noFill();
 
-    // 第一組線條：粗細 15
+    // 第一組線條：紅色，粗細 15
     stroke('red');
     strokeWeight(15);
     for (let i = 0; i < faceIndices.length - 1; i++) {
@@ -61,7 +61,7 @@ function draw() {
       }
     }
 
-    // 第二組線條：粗細 1
+    // 第二組線條：紅色，粗細 1 (您要求的編號序列)
     stroke('red');
     strokeWeight(1);
     for (let i = 0; i < faceIndices2.length - 1; i++) {
@@ -69,7 +69,7 @@ function draw() {
       let p2 = face.keypoints[faceIndices2[i + 1]];
 
       if (p1 && p2) {
-        // 將座標從原始攝影機尺寸縮放到畫布上的 50% 顯示尺寸
+        // 座標縮放比例需與影像顯示尺寸 (50%) 一致
         let x1 = p1.x * (w / capture.width);
         let y1 = p1.y * (h / capture.height);
         let x2 = p2.x * (w / capture.width);
